@@ -1,19 +1,19 @@
-ARG VERSION=v0.9.1
+ARG VERSION=v0.9.3
 
-FROM rust:1.41.1-slim AS builder
+FROM rust:slim AS builder
 
 ARG VERSION
 
 WORKDIR /build
 
 RUN apt-get update
-RUN apt-get install -y git clang cmake libsnappy-dev
+RUN apt-get install -y git clang cmake libsnappy-dev build-essential
 
 RUN git clone --branch $VERSION https://github.com/romanz/electrs .
+RUN cargo install cross
+RUN cross build --target armv7-unknown-linux-gnueabihf
 
-RUN cargo install --locked --path .
-
-FROM debian:buster-slim
+FROM debian:slim
 
 RUN adduser --disabled-password --uid 1000 --home /data --gecos "" electrs
 USER electrs
