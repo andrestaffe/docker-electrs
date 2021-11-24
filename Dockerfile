@@ -15,7 +15,7 @@ RUN git clone --branch $VERSION https://github.com/andrestaffe/electrs.git .
 RUN cargo install cross
 RUN cross build --target armv7-unknown-linux-gnueabihf --release
 
-FROM debian:slim
+FROM debian:bullseye-slim
 
 RUN adduser --disabled-password --uid 1000 --home /data --gecos "" electrs
 USER electrs
