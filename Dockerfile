@@ -6,12 +6,14 @@ ARG VERSION
 
 WORKDIR /build
 
+RUN rustup target add armv7-unknown-linux-musleabihf
 RUN apt-get update
-RUN apt-get install -y git clang cmake libsnappy-dev build-essential
+RUN apt-get install -y git clang cmake libsnappy-dev build-essential binutils-arm-linux-gnueabihf gcc-arm-linux-gnueabihf
 
-RUN git clone --branch $VERSION https://github.com/romanz/electrs .
+RUN git clone --branch $VERSION https://github.com/andrestaffe/electrs.git .
+
 RUN cargo install cross
-RUN cross build --target armv7-unknown-linux-gnueabihf
+RUN cross build --target armv7-unknown-linux-gnueabihf --release
 
 FROM debian:slim
 
