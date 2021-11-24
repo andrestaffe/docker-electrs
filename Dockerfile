@@ -1,20 +1,19 @@
 ARG VERSION=v0.9.3
 
-FROM rust:slim AS builder
+FROM --platform=$BUILDPLATFORM rust:slim AS builder
 
 ARG VERSION
 
 WORKDIR /build
 
-RUN rustup target add armv7-unknown-linux-musleabihf
 RUN apt-get update
-RUN apt-get install -y git clang cmake libsnappy-dev build-essential binutils-arm-linux-gnueabihf gcc-arm-linux-gnueabihf
+RUN apt-get install -y git clang cmake libsnappy-dev
 
-RUN git clone --branch $VERSION https://github.com/andrestaffe/electrs.git .
+RUN git clone --branch $VERSION https://github.com/romanz/electrs .
 
-RUN cargo build --target armv7-unknown-linux-gnueabihf --release
+RUN cargo install --locked --path .
 
-FROM debian:bullseye-slim
+FROM --platform=$BUILDPLATFORM debian:bullseye-slim
 
 RUN adduser --disabled-password --uid 1000 --home /data --gecos "" electrs
 USER electrs
