@@ -12,8 +12,7 @@ RUN apt-get install -y git clang cmake libsnappy-dev build-essential binutils-ar
 
 RUN git clone --branch $VERSION https://github.com/andrestaffe/electrs.git .
 
-RUN cargo install cross
-RUN cross build --target armv7-unknown-linux-gnueabihf --release
+RUN cargo build --target armv7-unknown-linux-gnueabihf --release
 
 FROM debian:bullseye-slim
 
